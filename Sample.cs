@@ -26,7 +26,13 @@ namespace DevSample
             private set;
         }
 
-        public long Value
+        //public long Value
+        //{
+        //    get;
+        //    private set;
+        //}
+
+        public decimal Value
         {
             get;
             private set;

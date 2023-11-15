@@ -78,16 +78,17 @@ namespace DevSample
 
 
 
-                    float valueSum = 0;
+                    //float valueSum = 0;
+                    decimal valueSum = 0;
 
                     foreach (Sample s in sampleGenerator.Samples)
                     {
                         valueSum += s.Value;
                     }
 
-                    //TODO: why do we only seem to get 7 digits of precision? The CEO wants to see at least 20!
-                    LogMessage($"Cycle {i} Sum of All Samples: {valueSum.ToString("N")}.");
-
+                    //Complete: why do we only seem to get 7 digits of precision? The CEO wants to see at least 20!
+                    //LogMessage($"Cycle {i} Sum of All Samples: {valueSum.ToString("N")}.");
+                    LogMessage($"Cycle {i} Sum of All Samples: {valueSum:N}.");
 
                     LogMessage($"Cycle {i} Finished. Total Cycle Time: {cycleElapsedTime.TotalMilliseconds.ToString("N")} ms.");
 
@@ -111,8 +112,8 @@ namespace DevSample
 
         static void LogMessage(string message)
         {
-            LogToFile($"{DateTime.Now.ToString("HH:mm:ss.fffff")} - {message}{Environment.NewLine}");
-            Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fffff")} - {message}");
+            LogToFile($"{DateTime.Now:HH:mm:ss.fffff} - {message}{Environment.NewLine}");
+            Console.WriteLine($"{DateTime.Now:HH:mm:ss.fffff} - {message}");
         }
 
         static void LogToFile(string message)
