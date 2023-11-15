@@ -7,29 +7,34 @@ using System.Threading.Tasks;
 namespace DevSample
 {
     /// <summary>
-    /// File logger helper class.
+    /// Provides logging functionality to write messages to a file asynchronously.
     /// </summary>
     internal class FileLogger
     {
+        /// <summary>
+        /// Gets or sets the path for the log file.
+        /// </summary>
         public static string LogFile = $"{ConfigurationManager.AppSettings["LogFilePath"]}\\{DateTime.Now:yyyyMMddHHmmss}_log.txt";
 
         /// <summary>
-        /// This method writes messages to the console and log file.
+        /// Logs a message with a timestamp and outputs it to the console.
         /// </summary>
-        /// <param name="message">Message param to append to console and log.</param>
+        /// <param name="message">The message to be logged.</param>
         public static void LogMessage(string message)
         {
             var logMessage = $"{DateTime.Now:HH:mm:ss.fffff} - {message}";
             Console.WriteLine(logMessage);
-            //Don't wait for the logger to write to file for more performance.
+
+            // Don't wait for the logger to write to file for more performance.
 #pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
             LogToFileAsync(logMessage);
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
         /// <summary>
-        /// Log to file async task.
+        /// Asynchronously appends the log message to the log file.
         /// </summary>
+        /// <param name="message">The log message to be appended.</param>
         private static async Task LogToFileAsync(string message)
         {
             const int maxRetries = 10;
@@ -44,7 +49,7 @@ namespace DevSample
                 }
                 catch (IOException ex) when (IsFileLocked(ex))
                 {
-                    // If file is locked, wait a moment and retry
+                    // If the file is locked, wait a moment and retry
                     await Task.Delay(10);
                     retries++;
                 }
@@ -58,8 +63,10 @@ namespace DevSample
         }
 
         /// <summary>
-        /// Helper method to check if the exception is due to a locked file.
+        /// Checks if a file is locked based on the exception information.
         /// </summary>
+        /// <param name="ex">The exception to be checked.</param>
+        /// <returns>True if the file is locked; otherwise, false.</returns>
         private static bool IsFileLocked(Exception ex)
         {
             if (!(ex is IOException ioException)) return false;
