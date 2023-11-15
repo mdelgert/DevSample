@@ -6,6 +6,8 @@ using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Runtime.InteropServices;
+using System.Threading;
 
 namespace DevSample
 {
@@ -31,16 +33,14 @@ namespace DevSample
 
         static void Main(string[] args)
         {
-
-            
             Stopwatch totalMonitor = new Stopwatch();
             totalMonitor.Start();
 
             LogMessage($"Starting Execution on a {Environment.ProcessorCount} core system. A total of {_cyclesToRun} cycles will be run");
 
-           
-
-            for (int i = 0; i < _cyclesToRun; i++)
+            //400% performance increase
+            //for (int i = 0; i < _cyclesToRun; i++)
+            Parallel.For(0, _cyclesToRun, i =>
             {
                 try
                 {
@@ -93,12 +93,12 @@ namespace DevSample
                     LogMessage($"Cycle {i} Finished. Total Cycle Time: {cycleElapsedTime.TotalMilliseconds.ToString("N")} ms.");
 
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
                     LogMessage($"Execution Failed!\n{ex.ToString()}");
                 }
 
-            }
+            });
 
             totalMonitor.Stop();
 
@@ -112,8 +112,9 @@ namespace DevSample
 
         static void LogMessage(string message)
         {
-            LogToFile($"{DateTime.Now:HH:mm:ss.fffff} - {message}{Environment.NewLine}");
-            Console.WriteLine($"{DateTime.Now:HH:mm:ss.fffff} - {message}");
+            var logMessage = $"{DateTime.Now:HH:mm:ss.fffff} - {message}";
+            Console.WriteLine(logMessage);
+            LogToFile(logMessage);
         }
 
         static void LogToFile(string message)
@@ -122,15 +123,43 @@ namespace DevSample
             //everything written to the console should also be written to a log under
             //C:\Temp. A new log with a unique file name should be created each time the application is run.
 
-            try
+            const int maxRetries = 10;
+            int retries = 0;
+
+            while (retries < maxRetries)
             {
-                // Append the log entry to the log file
-                File.AppendAllText(_logFile, message);
+                try
+                {
+                    // Append the log entry to the log file
+                    File.AppendAllText(_logFile, message + Environment.NewLine);
+                    return; // If successful, exit the loop
+                }
+                catch (IOException ex) when (IsFileLocked(ex))
+                {
+                    // File is locked, wait a moment and then retry
+                    Thread.Sleep(10);
+                    retries++;
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"Error appending to log file: {ex.Message}");
+                    return; // Exit the loop on any other exception
+                }
             }
-            catch (Exception ex)
+
+            Console.WriteLine($"Failed to append to log file after {maxRetries} retries.");
+        }
+
+        // Helper method to check if the exception is due to a locked file
+        static bool IsFileLocked(Exception ex)
+        {
+            if (ex is IOException ioException)
             {
-                Console.WriteLine($"Error appending to log file: {ex.Message}");
+                int errorCode = Marshal.GetHRForException(ioException) & ((1 << 16) - 1);
+                return errorCode == 32 || errorCode == 33; // 32: Sharing violation, 33: Lock violation
             }
+
+            return false;
         }
     }
 }

@@ -8,7 +8,6 @@ namespace DevSample
 {
     class Sample
     {
-
         public Sample(bool isFirstSample)
         {
             IsFirstSample = isFirstSample;
@@ -54,7 +53,6 @@ namespace DevSample
             for (int i = 0; i < 1000; i++) ;
         }
 
-        
         public bool ValidateSample(Sample previousSample, TimeSpan sampleInterval)
         {
 
@@ -69,10 +67,6 @@ namespace DevSample
             HasBeenValidated = true;
 
             return true;
-
-
         }
-
-
     }
 }
