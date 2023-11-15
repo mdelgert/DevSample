@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Configuration;
+using System.IO;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
@@ -9,17 +11,17 @@ namespace DevSample
 {
     class Program
     {
-
+        static readonly string _logFilePath = ConfigurationManager.AppSettings["LogFilePath"];
+        static readonly string _logFile;
         static readonly int _cyclesToRun;
         static readonly int _samplesToLoad;
         static readonly DateTime _sampleStartDate;
         static readonly TimeSpan _sampleIncrement;
         
-
         static Program()
         {
             //Note: these settings should not be modified
-
+            _logFile = $"{_logFilePath}\\{DateTime.Now:yyyyMMddHHmmss}_log.txt";
             _cyclesToRun = Environment.ProcessorCount  > 1 ? Environment.ProcessorCount / 2 : 1; //hopefully we have more than 1 core to work with, run cores/2 cycles with a max of 4 cycles
             _cyclesToRun = _cyclesToRun > 4 ? 4 : _cyclesToRun;
             _samplesToLoad = 222222;
@@ -107,20 +109,27 @@ namespace DevSample
 
         }
 
-
-
         static void LogMessage(string message)
         {
-
-            LogToFile(message);
+            LogToFile($"{DateTime.Now.ToString("HH:mm:ss.fffff")} - {message}{Environment.NewLine}");
             Console.WriteLine($"{DateTime.Now.ToString("HH:mm:ss.fffff")} - {message}");
         }
 
         static void LogToFile(string message)
         {
-            //TODO: implement this when someone complains about it not working... 
-            //everything written to the console should also be written to a log under C:\Temp. A new log with a unique file name should be created each time the application is run.
+            //Complete: implement this when someone complains about it not working... 
+            //everything written to the console should also be written to a log under
+            //C:\Temp. A new log with a unique file name should be created each time the application is run.
 
+            try
+            {
+                // Append the log entry to the log file
+                File.AppendAllText(_logFile, message);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Error appending to log file: {ex.Message}");
+            }
         }
     }
 }
