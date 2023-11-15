@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace DevSample
 {
     /// <summary>
-    /// Provides functionality to process and validate samples in parallel cycles.
+    ///     Provides functionality to process and validate samples in parallel cycles.
     /// </summary>
     internal static class SampleProcessor
     {
@@ -30,7 +30,7 @@ namespace DevSample
         }
 
         /// <summary>
-        /// Performs parallel cycles of sample loading, validation, and logging.
+        ///     Performs parallel cycles of sample loading, validation, and logging.
         /// </summary>
         public static void WorkCycles()
         {

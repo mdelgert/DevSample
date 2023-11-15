@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DevSample
 {
     /// <summary>
-    /// Generates and validates a collection of time-ordered samples.
+    ///     Generates and validates a collection of time-ordered samples.
     /// </summary>
     internal class SampleGenerator
     {
@@ -16,7 +16,7 @@ namespace DevSample
         private readonly DateTime _sampleStartDate;
 
         /// <summary>
-        /// Initializes a new instance of the <see cref="SampleGenerator"/> class.
+        ///     Initializes a new instance of the <see cref="SampleGenerator" /> class.
         /// </summary>
         /// <param name="sampleStartDate">The starting date for generating samples.</param>
         /// <param name="sampleIncrement">The time increment between samples.</param>
@@ -30,17 +30,17 @@ namespace DevSample
         }
 
         /// <summary>
-        /// Gets the generated samples as a time-descending ordered list.
+        ///     Gets the generated samples as a time-descending ordered list.
         /// </summary>
         public IEnumerable<Sample> Samples => _sampleList;
 
         /// <summary>
-        /// Gets the number of samples that have been successfully validated.
+        ///     Gets the number of samples that have been successfully validated.
         /// </summary>
         public int SamplesValidated { get; private set; }
 
         /// <summary>
-        /// Loads the specified number of samples.
+        ///     Loads the specified number of samples.
         /// </summary>
         /// <param name="samplesToGenerate">The number of samples to generate.</param>
         public void LoadSamples(int samplesToGenerate)
@@ -61,7 +61,7 @@ namespace DevSample
         }
 
         /// <summary>
-        /// Validates the generated samples in parallel.
+        ///     Validates the generated samples in parallel.
         /// </summary>
         public void ValidateSamples()
         {

@@ -7,17 +7,18 @@ using System.Threading.Tasks;
 namespace DevSample
 {
     /// <summary>
-    /// Provides logging functionality to write messages to a file asynchronously.
+    ///     Provides logging functionality to write messages to a file asynchronously.
     /// </summary>
     internal class FileLogger
     {
         /// <summary>
-        /// Gets or sets the path for the log file.
+        ///     Gets or sets the path for the log file.
         /// </summary>
-        public static string LogFile = $"{ConfigurationManager.AppSettings["LogFilePath"]}\\{DateTime.Now:yyyyMMddHHmmss}_log.txt";
+        public static string LogFile =
+            $"{ConfigurationManager.AppSettings["LogFilePath"]}\\{DateTime.Now:yyyyMMddHHmmss}_log.txt";
 
         /// <summary>
-        /// Logs a message with a timestamp and outputs it to the console.
+        ///     Logs a message with a timestamp and outputs it to the console.
         /// </summary>
         /// <param name="message">The message to be logged.</param>
         public static void LogMessage(string message)
@@ -32,7 +33,7 @@ namespace DevSample
         }
 
         /// <summary>
-        /// Asynchronously appends the log message to the log file.
+        ///     Asynchronously appends the log message to the log file.
         /// </summary>
         /// <param name="message">The log message to be appended.</param>
         private static async Task LogToFileAsync(string message)
@@ -63,7 +64,7 @@ namespace DevSample
         }
 
         /// <summary>
-        /// Checks if a file is locked based on the exception information.
+        ///     Checks if a file is locked based on the exception information.
         /// </summary>
         /// <param name="ex">The exception to be checked.</param>
         /// <returns>True if the file is locked; otherwise, false.</returns>

@@ -3,13 +3,13 @@
 namespace DevSample
 {
     /// <summary>
-    /// Represents the entry point of the program. Prior total elapsed time: 4237765 milliseconds. 
-    /// Optimized total elapsed time: 111801 milliseconds. Around 4100% performance increase.
+    ///     Represents the entry point of the program. Prior total elapsed time: 4237765 milliseconds.
+    ///     Optimized total elapsed time: 111801 milliseconds. Around 4100% performance increase.
     /// </summary>
     internal abstract class Program
     {
         /// <summary>
-        /// The main entry point for the application.
+        ///     The main entry point for the application.
         /// </summary>
         private static void Main()
         {
