@@ -5,6 +5,9 @@ using System.Threading.Tasks;
 
 namespace DevSample
 {
+    /// <summary>
+    /// Provides functionality to process and validate samples in parallel cycles.
+    /// </summary>
     internal static class SampleProcessor
     {
         private static readonly int CyclesToRun;
@@ -12,6 +15,7 @@ namespace DevSample
         private static readonly DateTime SampleStartDate;
         private static readonly TimeSpan SampleIncrement;
 
+        // Static constructor to initialize settings
         static SampleProcessor()
         {
             // Note: these settings should not be modified
@@ -25,6 +29,9 @@ namespace DevSample
             SampleIncrement = new TimeSpan(0, 5, 0);
         }
 
+        /// <summary>
+        /// Performs parallel cycles of sample loading, validation, and logging.
+        /// </summary>
         public static void WorkCycles()
         {
             var totalMonitor = new Stopwatch();
@@ -33,6 +40,7 @@ namespace DevSample
             FileLogger.LogMessage(
                 $"Starting Execution on a {Environment.ProcessorCount} core system. A total of {CyclesToRun} cycles will be run");
 
+            // Parallel loop for multiple cycles
             Parallel.For(0, CyclesToRun, i => // 400% performance increase
             {
                 try
