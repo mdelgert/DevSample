@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DevSample
@@ -12,9 +14,10 @@ namespace DevSample
         private readonly TimeSpan _sampleIncrement;
         private readonly List<Sample> _sampleList;
 
-        public SampleGenerator(DateTime sampleStartDate, TimeSpan sampleIncrement)
+        public SampleGenerator(DateTime sampleStartDate, TimeSpan sampleIncrement, int samplesToGenerate)
         {
-            _sampleList = new List<Sample>();
+            // Use List<T> constructor with initial capacity this reduces number of reallocations as the list grows.
+            _sampleList = new List<Sample>(samplesToGenerate);
             _sampleStartDate = sampleStartDate;
             _sampleIncrement = sampleIncrement;
         }
@@ -28,7 +31,7 @@ namespace DevSample
 
         public void LoadSamples(int samplesToGenerate)
         {
-            //TODO: can we load samples faster?
+            //Complete: can we load samples faster?
 
             _sampleList.Clear();
 
@@ -38,9 +41,8 @@ namespace DevSample
             {
                 Sample s = new Sample(i == 0);
                 s.LoadSampleAtTime(date);
-
-                _sampleList.Insert(0, s);
-
+                //_sampleList.Insert(0, s);
+                _sampleList.Add(s); //800% performance increase
                 date += _sampleIncrement;
             }
         }
@@ -53,10 +55,16 @@ namespace DevSample
 
             //80% performance increase
             //for (int i = 0; i < _sampleList.Count; i++)
-            Parallel.For(0, _sampleList.Count, i =>
+
+            // Run loop in reverse order using Parallel.ForEach
+            Parallel.ForEach(Partitioner.Create(0, _sampleList.Count), range =>
             {
-                if (_sampleList[i].ValidateSample(i < _sampleList.Count - 1 ? _sampleList[i + 1] : null, _sampleIncrement)) //in this sample the ValidateSample is always true but assume that's not always the case
-                    samplesValidated++;
+                for (int i = range.Item2 - 1; i >= range.Item1; i--)
+                {
+                    //in this sample the ValidateSample is always true but assume that's not always the case
+                    if (_sampleList[i].ValidateSample(i > 0 ? _sampleList[i - 1] : null, _sampleIncrement))
+                        Interlocked.Increment(ref samplesValidated);
+                }
             });
 
             SamplesValidated = samplesValidated;

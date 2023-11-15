@@ -13,7 +13,6 @@ namespace DevSample
 {
     class Program
     {
-        static readonly string _logFilePath = ConfigurationManager.AppSettings["LogFilePath"];
         static readonly string _logFile;
         static readonly int _cyclesToRun;
         static readonly int _samplesToLoad;
@@ -23,7 +22,7 @@ namespace DevSample
         static Program()
         {
             //Note: these settings should not be modified
-            _logFile = $"{_logFilePath}\\{DateTime.Now:yyyyMMddHHmmss}_log.txt";
+            _logFile = $"{ConfigurationManager.AppSettings["LogFilePath"]}\\{DateTime.Now:yyyyMMddHHmmss}_log.txt";
             _cyclesToRun = Environment.ProcessorCount  > 1 ? Environment.ProcessorCount / 2 : 1; //hopefully we have more than 1 core to work with, run cores/2 cycles with a max of 4 cycles
             _cyclesToRun = _cyclesToRun > 4 ? 4 : _cyclesToRun;
             _samplesToLoad = 222222;
@@ -49,7 +48,7 @@ namespace DevSample
 
                     Stopwatch cycleTimer = new Stopwatch();
 
-                    SampleGenerator sampleGenerator = new SampleGenerator(_sampleStartDate, _sampleIncrement);
+                    SampleGenerator sampleGenerator = new SampleGenerator(_sampleStartDate, _sampleIncrement, _samplesToLoad);
 
                     LogMessage($"Cycle {i} Started Sample Load.");
 
