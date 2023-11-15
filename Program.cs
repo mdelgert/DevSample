@@ -6,7 +6,7 @@ namespace DevSample
 {
     internal abstract class Program
     {
-        private static void Main(string[] args)
+        private static void Main()
         {
             SampleProcessor.WorkCycles();
             Console.Read();
