@@ -6,10 +6,17 @@ using System.Threading.Tasks;
 
 namespace DevSample
 {
+    /// <summary>
+    /// File logger helper class.
+    /// </summary>
     internal class FileLogger
     {
         public static string LogFile = $"{ConfigurationManager.AppSettings["LogFilePath"]}\\{DateTime.Now:yyyyMMddHHmmss}_log.txt";
 
+        /// <summary>
+        /// This method writes messages to the console and log file.
+        /// </summary>
+        /// <param name="message">Message param to append to console and log.</param>
         public static void LogMessage(string message)
         {
             var logMessage = $"{DateTime.Now:HH:mm:ss.fffff} - {message}";
@@ -20,10 +27,11 @@ namespace DevSample
 #pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
 
+        /// <summary>
+        /// Log to file async task.
+        /// </summary>
         private static async Task LogToFileAsync(string message)
         {
-            // Complete: implement this when someone complains about it not working... everything written to the console should
-            // also be written to a log under C:\Temp. A new log with a unique file name should be created each time the application is run.
             const int maxRetries = 10;
             var retries = 0;
 
@@ -49,7 +57,9 @@ namespace DevSample
             Console.WriteLine($"Failed to append to log file after {maxRetries} retries.");
         }
 
-        // Helper method to check if the exception is due to a locked file
+        /// <summary>
+        /// Helper method to check if the exception is due to a locked file.
+        /// </summary>
         private static bool IsFileLocked(Exception ex)
         {
             if (!(ex is IOException ioException)) return false;
