@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Configuration;
 using System.IO;
 using System.Runtime.InteropServices;
 using System.Threading.Tasks;
@@ -7,9 +8,9 @@ namespace DevSample
 {
     internal class FileLogger
     {
-        private static readonly string LogFile;
+        public static string LogFile = $"{ConfigurationManager.AppSettings["LogFilePath"]}\\{DateTime.Now:yyyyMMddHHmmss}_log.txt";
 
-        private static void LogMessage(string message)
+        public static void LogMessage(string message)
         {
             var logMessage = $"{DateTime.Now:HH:mm:ss.fffff} - {message}";
             Console.WriteLine(logMessage);
@@ -48,6 +49,7 @@ namespace DevSample
             Console.WriteLine($"Failed to append to log file after {maxRetries} retries.");
         }
 
+        // Helper method to check if the exception is due to a locked file
         private static bool IsFileLocked(Exception ex)
         {
             if (!(ex is IOException ioException)) return false;
