@@ -4,7 +4,6 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Threading;
 using System.Threading.Tasks;
 
 //Prior total elapsed time: 4237765 milliseconds. Optimized total elapsed time: 111801 milliseconds. Around 4100% performance increase.
@@ -86,10 +85,13 @@ namespace DevSample
         {
             var logMessage = $"{DateTime.Now:HH:mm:ss.fffff} - {message}";
             Console.WriteLine(logMessage);
-            LogToFile(logMessage);
+            //Don't wait for the logger to write to file for more performance.
+#pragma warning disable CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
+            LogToFileAsync(logMessage);
+#pragma warning restore CS4014 // Because this call is not awaited, execution of the current method continues before the call is completed
         }
-
-        private static void LogToFile(string message)
+        
+        private static async Task LogToFileAsync(string message)
         {
             // Complete: implement this when someone complains about it not working... everything written to the console should
             // also be written to a log under C:\Temp. A new log with a unique file name should be created each time the application is run.
@@ -106,7 +108,7 @@ namespace DevSample
                 catch (IOException ex) when (IsFileLocked(ex))
                 {
                     // If file is locked, wait a moment and retry
-                    Thread.Sleep(10);
+                    await Task.Delay(10);
                     retries++;
                 }
                 catch (Exception ex)
