@@ -1,36 +1,25 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DevSample
 {
-    class Sample
+    internal class Sample
     {
         public Sample(bool isFirstSample)
         {
             IsFirstSample = isFirstSample;
         }
 
-        public bool IsFirstSample
+        private bool IsFirstSample
         {
             get;
-            private set;
         }
 
-        public DateTime Timestamp
+        private DateTime Timestamp
         {
             get;
-            private set;
+            set;
         }
-
-        //public long Value
-        //{
-        //    get;
-        //    private set;
-        //}
-
+        
         public decimal Value
         {
             get;
